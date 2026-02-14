@@ -1,0 +1,854 @@
+:root {
+    --bg-color: #FAF3E1;
+    --text-color: #222222;
+    --accent-color: #FA8112;
+
+    --font-heading: 'Syne', sans-serif;
+    --font-body: 'Space Grotesk', monospace;
+
+    --spacing-unit: 1rem;
+    --border-width: 2px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    height: 100vh;
+    /* Full viewport height */
+    overflow: hidden;
+    /* No scrolling */
+    display: flex;
+    /* Flex container */
+    flex-direction: column;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+/* Layout */
+.main-header {
+    border-bottom: var(--border-width) solid var(--text-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: var(--bg-color);
+    flex: 0 0 auto;
+    /* Header doesn't shrink/grow */
+}
+
+/* ... Logo & Nav unchanged ... */
+
+main {
+    flex: 1;
+    /* Takes remaining space */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Hero Section - FIXED */
+.hero {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    /* 60% text, 40% graphic */
+    /* border-bottom removed */
+    flex: 1;
+    /* Fill main */
+    height: 100%;
+    min-height: 0;
+}
+
+.hero-content {
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: var(--border-width) solid var(--text-color);
+    text-align: left;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+    /* Strictly no scroll */
+}
+
+/* Typography inside views */
+.view h2 {
+    font-size: 10vw;
+    line-height: 0.9;
+    margin-bottom: 2rem;
+    word-break: break-word;
+}
+
+.hero-text {
+    font-size: 1.2rem;
+    max-width: 600px;
+}
+
+/* View management */
+.view {
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(10px);
+}
+
+.view.active {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    transform: translateY(0);
+}
+
+.view.fading-out {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.view h3 {
+    margin: 0;
+    font-size: 2.5rem;
+    letter-spacing: -1px;
+}
+
+/* Article & Browse List Styling - Scrollable Card Section */
+.view#articles-view,
+.view#browse-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.article-list {
+    width: 100%;
+    max-width: 800px;
+    margin-left: 0;
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 1.5rem 2rem 10px;
+    /* Added 10px top/left for hover "breathing room" */
+    display: flex;
+    flex-direction: column;
+}
+
+.wip-message {
+    margin-top: 4rem;
+    border-left: var(--border-width) solid var(--text-color);
+    padding-left: 1.5rem;
+    opacity: 0.6;
+}
+
+.wip-message h3 {
+    height: auto !important;
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    display: block !important;
+}
+
+.wip-message p {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    max-width: 400px;
+}
+
+/* Custom scrollbar for brutalist look */
+.article-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.article-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-left: 1px solid var(--text-color);
+}
+
+.article-list::-webkit-scrollbar-thumb {
+    background: var(--text-color);
+}
+
+.article-item {
+    background-color: var(--bg-color);
+    border: var(--border-width) solid var(--text-color);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect width */
+}
+
+.article-item:hover {
+    background-color: white;
+    transform: translate(-6px, -6px);
+    /* Slightly more pronounced but safe now */
+    box-shadow: 6px 6px 0px var(--text-color);
+}
+
+.article-item h4 {
+    font-size: 1.8rem;
+    margin: 0.5rem 0;
+    line-height: 1.1;
+}
+
+/* Shared Tag Styles */
+.card-tags,
+.detail-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.card-tags {
+    margin-top: 1rem;
+}
+
+.detail-tags {
+    margin-bottom: 2rem;
+    gap: 0.8rem;
+}
+
+/* Limit to 4 tags per row/view */
+.card-tags .tag:nth-child(n+5),
+.detail-tag:nth-child(n+5) {
+    display: none;
+}
+
+.article-item .tag,
+.detail-tag {
+    font-weight: 800;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    width: fit-content;
+    text-transform: uppercase;
+}
+
+.article-item .tag {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    font-size: 0.65rem;
+}
+
+.detail-tag {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+}
+
+/* Tags already consolidated above */
+
+.article-item .date {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    letter-spacing: 0.5px;
+}
+
+.article-item p {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Article Detail View Styling */
+#article-detail-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-header {
+    height: 80px;
+    /* Reduced from 120px */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Space for title */
+    flex: 0 0 auto;
+    position: relative;
+    padding-right: 1.5rem;
+}
+
+.sticky-title {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+    pointer-events: none;
+    max-width: 80%;
+    text-align: right;
+    line-height: 1.1;
+    display: block;
+}
+
+.sticky-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Shared View Header Styling */
+.view-header {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex: 0 0 auto;
+    padding: 1rem 2rem 1rem 0;
+    gap: 1rem;
+}
+
+/* Tag Select Styling */
+.tag-select-container {
+    padding: 0;
+    width: auto;
+    max-width: 100%;
+}
+
+.tag-select {
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-family: var(--font-body);
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    padding: 0.8rem 1.2rem;
+    min-height: 48px;
+    /* Standard accessible touch target size */
+    border: var(--border-width) solid var(--text-color);
+    border-radius: 4px;
+    /* Slightly softer brutalism for mobile */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FAF3E1' stroke-width='3' stroke-linecap='square' stroke-linejoin='arcs'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tag-select:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    transform: translate(-4px, -4px);
+    box-shadow: 4px 4px 0px var(--text-color);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='3' stroke-linecap='square' stroke-linejoin='arcs'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.tag-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.back-btn {
+    background: none;
+    border: 1px solid var(--text-color);
+    padding: 0.5rem 1rem;
+    font-family: var(--font-body);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Onboarding Styling */
+.onboarding-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-bottom: 5rem;
+}
+
+.onboarding-content {
+    max-width: 90%;
+    width: 800px;
+    border-left: 6px solid var(--accent-color);
+    padding-left: clamp(1rem, 5vw, 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.onboarding-content p {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    opacity: 0.7;
+    flex: 1;
+}
+
+.onboarding-arrow {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 6vw, 4rem);
+    color: var(--accent-color);
+    animation: bounce 2s infinite ease-in-out;
+    flex-shrink: 0;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(10px);
+    }
+}
+
+#article-full-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 1.5rem;
+    max-width: 750px;
+    /* Better line length for reading */
+}
+
+#article-full-content h2 {
+    font-size: 3.5rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    /* Reduced to fit tags below */
+}
+
+/* Tags consolidated above */
+
+#article-full-content .meta {
+    font-weight: 700;
+    margin-bottom: 2rem;
+    display: block;
+    color: var(--accent-color);
+}
+
+#article-full-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+#article-full-content blockquote {
+    border-left: 4px solid var(--accent-color);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    font-size: 1.4rem;
+}
+
+.author-section {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: var(--border-width) solid var(--text-color);
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    background-color: rgba(0, 0, 0, 0.03);
+    /* Subtle background */
+    padding: 2rem;
+}
+
+.author-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: var(--border-width) solid var(--text-color);
+    filter: grayscale(1);
+    transition: filter 0.3s;
+}
+
+.author-img:hover {
+    filter: grayscale(0);
+}
+
+.author-info h5 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-color);
+}
+
+.author-info p {
+    font-size: 0.95rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0 !important;
+    opacity: 0.8;
+}
+
+/* Styling the detail scrollbar similar to list */
+#article-full-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#article-full-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#article-full-content::-webkit-scrollbar-thumb {
+    background: var(--text-color);
+    opacity: 0.3;
+}
+
+.about-text {
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    max-width: 500px;
+}
+
+.about-text p {
+    margin-bottom: 1.5rem;
+}
+
+.hero-graphic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    overflow: hidden;
+    position: relative;
+}
+
+.circle {
+    width: 80%;
+    /* Responsive width */
+    max-width: 400px;
+    aspect-ratio: 1 / 1;
+    /* Keep it circular */
+    height: auto;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    /* Subtle animation */
+    animation: pulse 8s infinite ease-in-out;
+    /* Default return transition: 4s (used when .expanded is removed) */
+    transition: background-color 0.5s ease-in-out,
+        transform 4s ease-in-out,
+        border-color 0.3s ease,
+        width 4s ease-in-out,
+        height 4s ease-in-out,
+        max-width 4s ease-in-out,
+        border-radius 4s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    will-change: transform, width, height, border-radius;
+    /* GPU pre-calculation */
+}
+
+.circle.pulse-off {
+    /* Don't stop all animations, just override the transform scale */
+    transform: scale(1) !important;
+    /* Lock scale at exactly 1 */
+    transition: transform 2s cubic-bezier(0.33, 1, 0.68, 1) !important;
+    /* Smooth transition from current pulse scale to 1 */
+}
+
+.circle.expanded {
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+
+    /* Dual Animation: Keep pulsing while morphing over 60s */
+    animation: pulse 8s infinite ease-in-out, morphExpansion 60s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes morphExpansion {
+
+    /* Stage 1: Ultra-Extended Oscillating Shrink (0% to 96.66% = 58s) */
+    0% {
+        width: 80%;
+        height: 80%;
+        max-width: 400px;
+        border-radius: 50%;
+    }
+
+    /* Granular cycles spread over 58s */
+    15% {
+        width: 56%;
+        height: 56%;
+        max-width: 280px;
+    }
+
+    22% {
+        width: 67%;
+        height: 67%;
+        max-width: 335px;
+    }
+
+    37% {
+        width: 47%;
+        height: 47%;
+        max-width: 235px;
+    }
+
+    44% {
+        width: 56%;
+        height: 56%;
+        max-width: 280px;
+    }
+
+    59% {
+        width: 39%;
+        height: 39%;
+        max-width: 195px;
+    }
+
+    66% {
+        width: 47%;
+        height: 47%;
+        max-width: 235px;
+    }
+
+    81% {
+        width: 27%;
+        height: 27%;
+        max-width: 135px;
+    }
+
+    86% {
+        width: 33%;
+        height: 33%;
+        max-width: 165px;
+    }
+
+    /* Final Shrink End at 96.66% (58s) */
+    96.66% {
+        width: 10px;
+        height: 10px;
+        max-width: 10px;
+        border-radius: 50%;
+    }
+
+    /* Stage 2: Linear Snap to Line (96.66% to 98.33% = 1s) */
+    98.33% {
+        width: 100%;
+        height: 1px;
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    /* Stage 3: Linear Explosive Fill (98.33% to 100% = 1s) */
+    100% {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        border-radius: 0;
+    }
+}
+
+.circle-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    z-index: 1;
+    filter: grayscale(1) contrast(1.1);
+}
+
+.circle-image.visible {
+    opacity: 1;
+}
+
+.circle.has-cover {
+    background-color: #222;
+    /* Darker background when showing image */
+    border-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Overlay mask for the image */
+/* Removed orange overlay */
+.circle::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.circle.has-cover::after {
+    opacity: 0;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.85);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Logo Styling */
+.logo {
+    font-size: 2.5rem;
+    line-height: 0.9;
+}
+
+.logo .highlight {
+    color: var(--accent-color);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    /* Extra trick: push the near-white background to pure white so multiply hides it perfectly */
+    filter: brightness(1.05) contrast(1.2);
+}
+
+/* Nav Styling */
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.main-nav a {
+    font-weight: 700;
+    font-size: 1.2rem;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.main-nav a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
+/* Footer - HIDDEN */
+.main-footer {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .view-header {
+        height: auto;
+        flex-direction: column;
+        align-items: stretch;
+        /* Stretch children (selector) to full width */
+        padding: 1.5rem 0;
+        gap: 1.5rem;
+    }
+
+    .tag-select-container {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .tag-select {
+        font-size: 1rem;
+        /* Slightly smaller text for mobile space */
+        padding: 1rem 1.5rem;
+        /* Larger tap area padding */
+    }
+
+    .onboarding-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .onboarding-arrow {
+        order: -1;
+        /* Arrow above text on mobile too */
+        transform: rotate(0deg);
+        /* Keep it pointing up */
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    /* ... rest of the existing mobile styles ... */
+
+    .hero-content {
+        border-right: none;
+    }
+
+    .hero-content h2 {
+        font-size: 2.5rem;
+        /* Reduced for mobile */
+    }
+
+    .hero-graphic {
+        display: none;
+    }
+
+    .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo {
+        font-size: 2.5rem;
+    }
+
+    .article-card {
+        grid-template-columns: 1fr;
+    }
+
+    .article-image {
+        border-right: none;
+        border-bottom: 1px solid var(--text-color);
+        height: 200px;
+    }
+}
