@@ -269,15 +269,21 @@ main {
 
 
 .article-item h4 {
-    font-size: 1.8rem;
+    font-size: clamp(0.85rem, 4vw, 1.8rem);
     margin: 0.5rem 0;
     line-height: 1.3;
     padding-bottom: 2px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
+    word-break: keep-all;
+    overflow-wrap: normal;
+    hyphens: none;
+    -webkit-hyphens: none;
     color: var(--text-color);
     display: block;
+}
+
+/* Smaller title for cards with long wide words */
+.compact-title h4 {
+    font-size: clamp(0.6rem, 3.2vw, 1.8rem);
 }
 
 /* Shared Tag Styles */

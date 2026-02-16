@@ -224,8 +224,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const desc = escapeHTML(item.description);
         const image = encodeURI(item.image);
 
+        // Detect long wide words: 9+ characters excluding 'i'
+        const hasWideWord = item.title.split(/\s+/).some(word => {
+            const nonICount = [...word.toLowerCase()].filter(ch => ch !== 'i').length;
+            return nonICount >= 9;
+        });
+        const compactClass = hasWideWord ? ' compact-title' : '';
+
         return `
-            <div class="article-item" data-id="${item.id}" data-image="${image}">
+            <div class="article-item${compactClass}" data-id="${item.id}" data-image="${image}">
                 <span class="date">${date} // ${author}</span>
                 <h4>${title}</h4>
                 <p>${desc}</p>
