@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chimaera Brasilis</title>
+    <meta name="description" content="Crítica de estética da arte e cultura brasileira.">
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com data:;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syne:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+    <!-- MOBILE HEADER (Editorial + Functional) -->
+    <header class="mobile-header">
+        <!-- Layer 1: Editorial (Logo/Slogan - Collapses on scroll) -->
+        <div class="mobile-editorial-layer">
+            <img src="logo.png" alt="Chimaera Mobile Logo" class="mobile-logo-img">
+            <svg class="mobile-logo-svg" viewBox="0 0 250 55" xmlns="http://www.w3.org/2000/svg"
+                aria-label="CHIMAERA BRASILIS">
+                <text x="0" y="22" font-family="'Syne', sans-serif" font-weight="800" font-size="24" fill="currentColor"
+                    letter-spacing="-0.5">CHIMAERA</text>
+                <text x="0" y="48" font-family="'Syne', sans-serif" font-weight="800" font-size="24"
+                    fill="var(--accent-color)" letter-spacing="-0.5">BRASILIS</text>
+            </svg>
+        </div>
+
+        <!-- Layer 2: Functional (Navigation - Sticky) -->
+        <nav class="mobile-functional-layer">
+            <!-- Sticky Logo (Visible only on scroll) -->
+            <img src="logo.png" alt="Chimaera" class="mobile-sticky-logo">
+
+            <ul class="mobile-tabs">
+                <li class="active"><a href="#" data-view="articles">ARTIGOS</a></li>
+                <li><a href="#" data-view="browse">NAVEGAR</a></li>
+                <li><a href="#" data-view="about">SOBRE</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- DESKTOP HEADER (Legacy) -->
+    <header class="main-header">
+        <div class="logo-container">
+            <img src="logo.png" alt="Chimaera Logo" class="logo-img" fetchpriority="high">
+            <svg class="logo-svg" viewBox="0 0 160 36" xmlns="http://www.w3.org/2000/svg"
+                aria-label="CHIMAERA BRASILIS">
+                <text x="0" y="14" font-family="'Syne', sans-serif" font-weight="800" font-size="14" fill="currentColor"
+                    letter-spacing="0">CHIMAERA</text>
+                <text x="0" y="30" font-family="'Syne', sans-serif" font-weight="800" font-size="14"
+                    fill="var(--accent-color)" letter-spacing="0">BRASILIS</text>
+            </svg>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#" data-view="articles">ARTIGOS</a></li>
+                <li><a href="#" data-view="browse">NAVEGAR</a></li>
+                <li><a href="#" data-view="about">SOBRE</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content" id="view-container">
+                <div id="home-view" class="view active">
+
+                    <!-- Mobile SVG Hero -->
+                    <svg class="hero-svg-mobile" viewBox="-2 -5 160 135" xmlns="http://www.w3.org/2000/svg"
+                        aria-label="SEM CONFORTO (mas prometemos leitura)">
+                        <text x="0" y="30" font-family="'Syne', sans-serif" font-weight="800" font-size="32"
+                            fill="currentColor" letter-spacing="-1">SEM</text>
+                        <text x="0" y="62" font-family="'Syne', sans-serif" font-weight="800" font-size="32"
+                            fill="currentColor" letter-spacing="-1">CONF</text>
+                        <text x="0" y="94" font-family="'Syne', sans-serif" font-weight="800" font-size="32"
+                            fill="currentColor" letter-spacing="-1">ORTO</text>
+
+                        <!-- Tagline Integrated -->
+                        <text x="0" y="125" font-family="'Space Grotesk', sans-serif" font-weight="400" font-size="9"
+                            fill="currentColor" letter-spacing="0">(mas prometemos leitura)</text>
+                    </svg>
+
+                    <!-- Desktop Text Hero (Replaced by SVG) -->
+                    <svg class="hero-svg-desktop" viewBox="0 0 320 270" xmlns="http://www.w3.org/2000/svg"
+                        aria-label="SEM CONFORTO (mas prometemos leitura)">
+                        <text x="0" y="70" font-family="'Syne', sans-serif" font-weight="900" font-size="85"
+                            fill="currentColor" letter-spacing="-2">SEM</text>
+                        <text x="0" y="145" font-family="'Syne', sans-serif" font-weight="900" font-size="85"
+                            fill="currentColor" letter-spacing="-2">CONF</text>
+                        <text x="0" y="220" font-family="'Syne', sans-serif" font-weight="900" font-size="85"
+                            fill="currentColor" letter-spacing="-2">ORTO</text>
+
+                        <!-- Tagline Integrated -->
+                        <text x="0" y="260" font-family="'Space Grotesk', sans-serif" font-weight="400" font-size="18"
+                            fill="currentColor" letter-spacing="0">(mas prometemos leitura)</text>
+                    </svg>
+                </div>
+
+                <div id="articles-view" class="view">
+                    <div class="view-header">
+                        <h3>ARTIGOS</h3>
+                    </div>
+                    <div class="article-list" id="articles-container">
+                        <!-- Articles will be injected by script.js -->
+                    </div>
+                </div>
+
+                <div id="browse-view" class="view">
+                    <div class="view-header">
+                        <h3>NAVEGAR</h3>
+                        <div id="tag-selector-container">
+                            <!-- Select will be injected by script.js once -->
+                        </div>
+                    </div>
+                    <div class="article-list" id="browse-container">
+                        <!-- Filtered list will be injected by script.js -->
+                    </div>
+                </div>
+
+                <div id="about-view" class="view">
+                    <div class="view-header">
+                        <h3>SOBRE</h3>
+                    </div>
+                    <div class="about-text">
+                        <p><em>Chimaera Brasilis</em> é um projeto de leitura crítica da cultura contemporânea.</p>
+                        <p>Do livro ao seriado, do gibi à imagem em movimento, buscamos fricção e atenção — nunca
+                            conforto.</p>
+                    </div>
+                </div>
+
+                <div id="article-detail-view" class="view">
+                    <div class="detail-header">
+                        <button class="back-btn">← VOLTAR</button>
+                        <h4 class="sticky-title"></h4>
+                    </div>
+                    <div id="article-full-content">
+                        <!-- Content will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-graphic">
+                <div class="circle">
+                    <div class="circle-image"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 CHIMAERA BRASILIS</p>
+            <p>FEITO NO BRASIL</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
