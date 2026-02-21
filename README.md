@@ -77,3 +77,25 @@ Este projeto foi construído propositalmente com tecnologias nativas (Vanilla) p
    ```
 2. Abra o arquivo `index.html` em qualquer navegador moderno.
    *(Recomendado: Use a extensão "Live Server" no VS Code para a melhor experiência)*
+
+---
+
+## 📋 Backlog & Feedback (Análise Pendente)
+
+Anotações de melhorias e feedbacks para futuras iterações:
+
+### 🎨 Visual & Tipografia
+- [ ] **Títulos de Artigos**: Avaliar fonte atual em títulos multi-linha (pode restringir a criatividade se ficar muito "pesado").
+- [ ] **Affordance da Logo**: Alterar cursor para `pointer` no hover da logo/home button para indicar que é clicável.
+
+### 📖 Leitura & Layout
+- [ ] **Foco no Texto**: Expandir o espaço ocupado pelo texto dos artigos para uma experiência mais próxima do Substack.
+- [ ] **Ritmo Visual**: Reavaliar o posicionamento de imagens ao lado do texto; considerar mais "respiro" para evitar sensação de pressa.
+
+### 🛠️ Técnico
+- [ ] **Safari Fix**: Corrigir componente "Sem Conforto" que está quebrado no Safari.
+- [ ] **Routing/SEO**: Implementar URLs próprias por página/artigo para facilitar o compartilhamento e melhorar indexação.
+
+### 🔍 SEO & Metadados
+- [ ] **Estrutura de SEO**: Revisar conteúdo, layout e código para incluir estrutura completa (subtítulos, palavras-chave, meta tags).
+

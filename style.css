@@ -1062,7 +1062,7 @@ main {
     /* Show Mobile Header */
     .mobile-header {
         display: block;
-        position: sticky;
+        position: fixed;
         top: 0;
         z-index: 1000;
         background-color: var(--bg-color);
@@ -1245,5 +1245,9 @@ main {
     .hero {
         padding-top: 1rem !important;
         /* Reset padding */
+    }
+
+    main {
+        padding-top: 125px;
     }
 }

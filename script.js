@@ -492,13 +492,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileHeader) {
         // Helper: collapse or expand based on scroll position
         function handleMobileScroll(scrollTop) {
-            if (scrollTop > 50) {
+            if (scrollTop > 50 && (activeViewId === 'articles' || activeViewId === 'browse')) {
                 mobileHeader.classList.add('collapsed');
-            } else {
-                // Only expand if on home view (uses tracked variable, not DOM)
-                if (activeViewId === 'home') {
-                    mobileHeader.classList.remove('collapsed');
-                }
+            } else if (scrollTop <= 50 && activeViewId === 'home') {
+                mobileHeader.classList.remove('collapsed');
             }
         }
 
