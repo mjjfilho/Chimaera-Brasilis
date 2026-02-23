@@ -77,6 +77,8 @@ a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    cursor: pointer;
+    /* Affordance: indica que é clicável */
 }
 
 .logo-img {
@@ -124,8 +126,15 @@ main {
     text-align: left;
     align-items: flex-start;
     position: relative;
+    /* FIX Safari/4K: Fallback para browsers antigos (Safari ≤15) que não
+       suportam overflow:clip. O clip é preferível ao hidden porque não cria
+       um novo containing-block, prevenindo o colapso de SVG no Safari moderno. */
     overflow: hidden;
-    /* Strictly no scroll */
+    /* Fallback: Safari ≤15 e browsers legados */
+    overflow: clip;
+    /* Preferencial: Safari 16+, Chrome 90+, Firefox 102+ */
+    min-height: 0;
+    /* Previne que o item flex expanda indefinidamente */
 }
 
 /* Typography inside views */
@@ -136,21 +145,32 @@ main {
     word-break: break-word;
 }
 
-/* Hero SVG Desktop - GIGANTE */
+/* Hero SVG Desktop —
+   FIX: usar width:100% em vez de width:auto para que o Flex/Grid
+   determine o tamanho (previne o colapso de 300px no Safari).
+   height:auto + aspect-ratio preserva proporção em qualquer resolução.
+   min-height garante visibilidade mínima quando o container está sem height.
+*/
 .hero-svg-desktop {
-    width: auto;
-    /* Allow shrink */
-    max-width: 100%;
-    /* Don't overflow width */
+    width: 100%;
+    /* Preenche o container — corrige o bug 4K/Safari */
     height: auto;
+    /* Mantém proporção via viewBox */
+    min-height: 200px;
+    /* Fallback: nunca colapsa abaixo de 200px */
     max-height: 75vh;
-    /* Prevent vertical cutoff */
+    /* Evita estouro vertical em telas altas */
+    max-width: 100%;
+    /* Nunca ultrapassa o container */
     color: var(--text-color);
     display: block;
+    /* Remove espaço de linha abaixo (inline default) */
     margin-bottom: 1rem;
     overflow: visible;
+    /* Texto com letter-spacing negativo não fica clipado */
+    flex-shrink: 0;
+    /* Dentro de flex, não deixa o SVG ser espremido */
 }
-
 
 /* View management */
 .view {
@@ -931,7 +951,7 @@ main {
     }
 }
 
-/* 4K Display Optimizations */
+/* 4K Display Optimizations (2560px+) */
 @media (min-width: 2560px) {
 
     /* Scale up base font size */
@@ -952,6 +972,12 @@ main {
     /* Increase spacing */
     .hero-content {
         padding: 0 4rem;
+    }
+
+    /* FIX: Garantir que o SVG nunca colapsa em 4K — min-height relativo à viewport */
+    .hero-svg-desktop {
+        min-height: 40vh;
+        max-height: 70vh;
     }
 
     .article-item {
@@ -980,6 +1006,12 @@ main {
 
     .hero-content {
         padding: 0 6rem;
+    }
+
+    /* FIX: Em ultrawide o SVG já escala via width:100%, mas garantimos
+       que o min-height seja proporcional à viewport */
+    .hero-svg-desktop {
+        min-height: 50vh;
     }
 
     .article-item {
@@ -1136,6 +1168,7 @@ main {
         mix-blend-mode: darken;
         transition: opacity 0.2s ease-out 0.05s;
         cursor: pointer;
+        /* Affordance: indica que é clicável */
         /* 50ms delay so it appears as editorial fades */
     }
 

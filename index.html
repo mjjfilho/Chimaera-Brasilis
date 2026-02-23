@@ -74,7 +74,9 @@
                 <div id="home-view" class="view active">
 
                     <!-- Mobile SVG Hero -->
-                    <svg class="hero-svg-mobile" viewBox="-2 -5 160 135" xmlns="http://www.w3.org/2000/svg"
+                    <!-- Mobile SVG Hero: width/height intrinsic + preserveAspectRatio prevents Safari/4K collapse -->
+                    <svg class="hero-svg-mobile" viewBox="-2 -5 160 135" xmlns="http://www.w3.org/2000/svg" width="160"
+                        height="135" preserveAspectRatio="xMinYMid meet"
                         aria-label="SEM CONFORTO (mas prometemos leitura)">
                         <text x="0" y="30" font-family="'Syne', sans-serif" font-weight="800" font-size="32"
                             fill="currentColor" letter-spacing="-1">SEM</text>
@@ -88,8 +90,9 @@
                             fill="currentColor" letter-spacing="0">(mas prometemos leitura)</text>
                     </svg>
 
-                    <!-- Desktop Text Hero (Replaced by SVG) -->
-                    <svg class="hero-svg-desktop" viewBox="0 0 320 270" xmlns="http://www.w3.org/2000/svg"
+                    <!-- Desktop SVG Hero: width/height intrinsic + preserveAspectRatio prevents Safari/4K collapse -->
+                    <svg class="hero-svg-desktop" viewBox="0 0 320 270" xmlns="http://www.w3.org/2000/svg" width="320"
+                        height="270" preserveAspectRatio="xMinYMid meet"
                         aria-label="SEM CONFORTO (mas prometemos leitura)">
                         <text x="0" y="70" font-family="'Syne', sans-serif" font-weight="900" font-size="85"
                             fill="currentColor" letter-spacing="-2">SEM</text>
