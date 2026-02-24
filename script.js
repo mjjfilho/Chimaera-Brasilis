@@ -368,6 +368,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         _fromPopstate = false;
 
+        // Reading Mode: expand grid to 75%/25% only on article-detail
+        const heroSection = document.querySelector('.hero');
+        if (heroSection) {
+            if (viewId === 'article-detail') {
+                heroSection.classList.add('reading-mode');
+            } else {
+                heroSection.classList.remove('reading-mode');
+            }
+        }
+
         // Mobile Header Logic: Only expand on home, auto-collapse on everything else
         if (mobileHeader) {
             if (viewId === 'home') {
@@ -441,16 +451,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 articleFullContainer.scrollTop = 0;
                 window.scrollTo(0, 0);
 
-                // Controlled process logic: 5s delay + 60s "squeeze" expansion + 2s final fit = 67s total
-                const delay = 5000;
+                // ANIMAÇÃO DE ENTRADA: circle expande ao abrir o artigo (original, restaurada)
                 expansionTimer = setTimeout(() => {
                     circle.classList.add('expanded');
-
-                    // The "Aperto": Stop pulse and settle scale to 1 after shrink ends (58s)
                     pulseOffTimer = setTimeout(() => {
                         circle.classList.add('pulse-off');
-                    }, 58000);
-                }, delay);
+                    }, 2500);
+                }, 500);
             }
         }, 500);
     }
@@ -561,7 +568,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Back Button
         if (e.target.closest('.back-btn')) {
-            // Use browser history if available, otherwise fall back to list view
+            // Timings alinhados com o CSS:
+            // switchView demora 500ms para remover reading-mode
+            // grid anima por 700ms (transition: grid-template-columns 0.7s)
+            // circleAppear dura 800ms
+            const GRID_SETTLE = 1200; // 500ms (switchView) + 700ms (grid transition)
+            const CIRCLE_ANIM = 800;  // mesmo valor definido no CSS
+
+            document.body.classList.add('anim-lock');
+
+            // Passo 1: ocultar o circle imediatamente (sem flash)
+            circle.classList.add('hidden-for-entry');
+            void circle.getBoundingClientRect(); // garante que hidden-for-entry foi aplicado
+
+            // Passo 2: resetar estado do circle sem animar (circle já invisible)
+            circle.style.transition = 'none';
+            circle.classList.remove('expanded', 'pulse-off', 'entering');
+            if (expansionTimer) { clearTimeout(expansionTimer); expansionTimer = null; }
+            if (pulseOffTimer) { clearTimeout(pulseOffTimer); pulseOffTimer = null; }
+            void circle.getBoundingClientRect();
+            circle.style.transition = '';
+
+            // Passo 3: navegar — switchView irá remover reading-mode,
+            // acionando a transição CSS do grid (Phase 1 da animação)
             if (window.history.length > 1) {
                 history.back();
             } else {
@@ -573,6 +602,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     switchView('articles');
                 }
             }
+
+            // Passo 4: após o grid terminar de animar, circle aparece (Phase 2)
+            setTimeout(() => {
+                circle.classList.remove('hidden-for-entry');
+                circle.classList.add('entering');
+
+                // Limpeza após o fade-in do circle
+                setTimeout(() => {
+                    circle.classList.remove('entering');
+                    document.body.classList.remove('anim-lock');
+                }, CIRCLE_ANIM);
+            }, GRID_SETTLE);
+
             return;
         }
     });

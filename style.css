@@ -109,12 +109,14 @@ main {
 .hero {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
-    /* 60% text, 40% graphic */
+    /* 60% texto, 40% imagem — proporção padrão */
     /* border-bottom removed */
     flex: 1;
     /* Fill main */
     height: 100%;
     min-height: 0;
+    /* Anima suavemente a mudança de grid ao entrar/sair do reading-mode */
+    transition: grid-template-columns 0.7s ease-in-out;
 }
 
 .hero-content {
@@ -126,15 +128,27 @@ main {
     text-align: left;
     align-items: flex-start;
     position: relative;
-    /* FIX Safari/4K: Fallback para browsers antigos (Safari ≤15) que não
-       suportam overflow:clip. O clip é preferível ao hidden porque não cria
-       um novo containing-block, prevenindo o colapso de SVG no Safari moderno. */
+    /* FIX Safari/4K: clip evita scroll lateral sem criar containing-block */
     overflow: hidden;
-    /* Fallback: Safari ≤15 e browsers legados */
+    /* Fallback: Safari ≥15 */
     overflow: clip;
     /* Preferencial: Safari 16+, Chrome 90+, Firefox 102+ */
     min-height: 0;
-    /* Previne que o item flex expanda indefinidamente */
+}
+
+/* No reading-mode, precisa de overflow visible para o scrollbar do artigo aparecer */
+.hero.reading-mode .hero-content {
+    overflow: visible;
+    justify-content: flex-start;
+    /* Artigo alinha pelo topo, não pelo centro */
+    padding-right: 1rem;
+    /* Respiro entre scrollbar e borda da imagem */
+}
+
+/* Grid expandido APENAS na tela de leitura de artigo */
+.hero.reading-mode {
+    grid-template-columns: 7fr 3fr;
+    /* 70% texto, 30% imagem */
 }
 
 /* Typography inside views */
@@ -383,6 +397,10 @@ main {
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    /* Garante que só o #article-full-content faça scroll */
+    width: 100%;
+    /* Ocupa todo o espaço do hero-content */
 }
 
 .detail-header {
@@ -535,13 +553,15 @@ main {
     }
 }
 
-/* TAREFA 2: Foco no Texto — max-width maior para leitura mais imersiva (estilo Substack) */
+/* Container de scroll: preenche a coluna, respiro via padding-right */
 #article-full-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 1.5rem;
-    max-width: 800px;
-    /* Era 750px — mais espaço de leitura */
+    /* Respiro interno entre texto e scrollbar */
+    width: 100%;
+    max-width: 100%;
 }
 
 #article-full-content h2 {
@@ -656,6 +676,13 @@ main {
     position: relative;
 }
 
+/* Grid expandido APENAS na tela de leitura de artigo */
+.hero.reading-mode {
+    grid-template-columns: 3fr 1fr;
+    /* 75% texto, 25% imagem */
+    transition: grid-template-columns 0.5s ease-in-out;
+}
+
 .circle {
     width: 80%;
     /* Responsive width */
@@ -690,93 +717,60 @@ main {
     /* Smooth transition from current pulse scale to 1 */
 }
 
+/* ── Animação de Saída (botão Voltar) ────────────────────────────── */
+
+/* Oculta o círculo sem flash enquanto o painel redimensiona */
+.circle.hidden-for-entry {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+/* Fase 2: bola aparece com fade-in simples após o painel terminar */
+@keyframes circleAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.circle.entering {
+    animation: circleAppear 0.8s ease-out forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────────── */
+
+/* Bloqueia TODA interação durante a animação — previne bugs de clique múltiplo */
+body.anim-lock {
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────── */
+
 .circle.expanded {
     border-radius: 0;
     width: 100%;
     height: 100%;
     max-width: 100%;
 
-    /* Dual Animation: Keep pulsing while morphing over 60s */
-    animation: pulse 8s infinite ease-in-out, morphExpansion 60s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    /* Animação mínima: direto do círculo para fill completo em 2s */
+    animation: morphExpansion 2s ease-in-out forwards;
 }
 
 @keyframes morphExpansion {
-
-    /* Stage 1: Ultra-Extended Oscillating Shrink (0% to 96.66% = 58s) */
-    0% {
+    from {
         width: 80%;
         height: 80%;
         max-width: 400px;
         border-radius: 50%;
     }
 
-    /* Granular cycles spread over 58s */
-    15% {
-        width: 56%;
-        height: 56%;
-        max-width: 280px;
-    }
-
-    22% {
-        width: 67%;
-        height: 67%;
-        max-width: 335px;
-    }
-
-    37% {
-        width: 47%;
-        height: 47%;
-        max-width: 235px;
-    }
-
-    44% {
-        width: 56%;
-        height: 56%;
-        max-width: 280px;
-    }
-
-    59% {
-        width: 39%;
-        height: 39%;
-        max-width: 195px;
-    }
-
-    66% {
-        width: 47%;
-        height: 47%;
-        max-width: 235px;
-    }
-
-    81% {
-        width: 27%;
-        height: 27%;
-        max-width: 135px;
-    }
-
-    86% {
-        width: 33%;
-        height: 33%;
-        max-width: 165px;
-    }
-
-    /* Final Shrink End at 96.66% (58s) */
-    96.66% {
-        width: 10px;
-        height: 10px;
-        max-width: 10px;
-        border-radius: 50%;
-    }
-
-    /* Stage 2: Linear Snap to Line (96.66% to 98.33% = 1s) */
-    98.33% {
-        width: 100%;
-        height: 1px;
-        max-width: 100%;
-        border-radius: 0;
-    }
-
-    /* Stage 3: Linear Explosive Fill (98.33% to 100% = 1s) */
-    100% {
+    to {
         width: 100%;
         height: 100%;
         max-width: 100%;
