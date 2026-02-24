@@ -1,5 +1,40 @@
 # 🐉 Dev Diary — Chimaera Brasilis
 
+
+---
+
+## Entry #4 — The "Exit Animation" Hell (February 23–24, 2026)
+
+### Fighting for Fluidity (and User Demands)
+
+Today was one of those days where the simplest things turned into a nightmare. Most of the time was spent fighting CSS transitions and JS timers to get the "back" animation right. It was exhausting. I worked on this completely fed up, but at least it's done. 
+
+The interesting part? All these refinements—from the specific exit sequence to the layout tweaks—were part of a deliberate **UX Research** effort. I moved beyond casual feedback and formalized the process:
+- **Questions & Forms**: Created a list of formalized questions and a feedback form to gather structured data.
+- **User Testing**: Ran testing sessions with family members (cousins) to observe real reactions to the navigation flow. 
+They were right about the friction, but implementing the fix was a special kind of hell.
+
+- **The Exit Struggle**: Implementation of a two-phase sequential animation for the article exit. Phase 1 animates the grid resizing (60/40 to 70/30) while hiding the circle to avoid flashes. Phase 2 handles the circle fade-in only after the layout is stable.
+- **`anim-lock`**: Had to implement a global interaction lock because multiple clicks during animations were breaking everything. Critical for stability, but a pain to debug.
+- **Routing & SEO**: Earlier today I also managed to implement the History API for shareable links (`/?artigo=X`) and finally set up proper SEO tags.
+
+---
+
+### Entrada #4 — O Inferno da "Animação de Saída" (23–24 de Fevereiro, 2026) 🇧🇷
+
+#### Lutando pela Fluidez (e pelas Demandas dos Usuários)
+
+Hoje foi um daqueles dias em que as coisas simples viraram um pesadelo. Passei a maior parte do tempo brigando com transições CSS e timers de JS pra fazer a animação de "voltar" funcionar direito. Foi exaustivo. Trabalhei nisso completamente de saco cheio, mas pelo menos tá entregue.
+
+O detalhe? Todo esse refinamento—desde a sequência de saída até os ajustes de layout—foi parte de um esforço de **Pesquisa de UX**. Saí do feedback informal e formalizei a parada:
+- **Formulários e Perguntas**: Criei uma lista de perguntas formalizadas e um formulário para colher dados estruturados.
+- **Testes de Usuário**: Fiz sessões de teste com primos e primas para ver na prática como os usuários reagiam ao fluxo de navegação.
+Eles estavam certos sobre onde a experiência estava travada, mas implementar a solução foi um inferno particular.
+
+- **A Luta na Saída**: Implementação de uma animação sequencial em duas fases para a saída do artigo. A Fase 1 anima o redimensionamento do grid enquanto esconde o círculo para evitar flashes. A Fase 2 faz o fade-in do círculo só depois que o layout está estável.
+- **`anim-lock`**: Tive que implementar um bloqueio global de interação porque múltiplos cliques durante as animações estavam quebrando tudo. Crítico para a estabilidade, mas um porre de debugar.
+- **Roteamento & SEO**: Mais cedo também implementei a History API para links compartilháveis (`/?artigo=X`) e finalmente configurei as tags de SEO corretamente.
+
 ---
 
 ## Entry #3 — Mobile Header & Safari Polish (February 19–20, 2026)
