@@ -293,6 +293,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastListView = 'articles';
     let activeViewId = 'home'; // Track intended view for scroll handler
+    let _fromPopstate = false; // Flag to prevent double-push when navigating via browser back/forward
+
+    // =========================================================
+    // ROUTING: History API
+    // Builds shareable URLs: /?artigo=1, /?navegar=Cinema, /?pagina=artigos
+    // =========================================================
+    function pushStateForView(viewId, param = null) {
+        const url = new URL(window.location.href);
+        url.search = ''; // Clear previous params
+
+        let title = 'Chimaera Brasilis';
+
+        if (viewId === 'home') {
+            // Root URL — no params
+        } else if (viewId === 'articles') {
+            url.searchParams.set('pagina', 'artigos');
+            title = 'Artigos — Chimaera Brasilis';
+        } else if (viewId === 'about') {
+            url.searchParams.set('pagina', 'sobre');
+            title = 'Sobre — Chimaera Brasilis';
+        } else if (viewId === 'browse') {
+            if (param) {
+                url.searchParams.set('navegar', param);
+                title = `${param} — Chimaera Brasilis`;
+            } else {
+                url.searchParams.set('pagina', 'navegar');
+                title = 'Navegar — Chimaera Brasilis';
+            }
+        } else if (viewId === 'article-detail' && param) {
+            // Find item to get title for document.title
+            const item = contentData.find(d => d.id === param);
+            url.searchParams.set('artigo', param);
+            title = item ? `${item.title} — Chimaera Brasilis` : 'Chimaera Brasilis';
+        }
+
+        history.pushState({ viewId, param }, title, url.toString());
+        document.title = title;
+    }
 
     function switchView(viewId, param = null) {
         const currentView = document.querySelector('.view.active');
@@ -323,6 +361,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update tracking immediately (before 500ms transition)
         activeViewId = viewId;
+
+        // Push to browser history (unless triggered by popstate)
+        if (!_fromPopstate) {
+            pushStateForView(viewId, param);
+        }
+        _fromPopstate = false;
 
         // Mobile Header Logic: Only expand on home, auto-collapse on everything else
         if (mobileHeader) {
@@ -412,9 +456,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize the page
-    // renderDynamicLists removed - called on view switch
     renderArticlesList(); // Pre-load just in case
     initTagSelector();
+
+    // =========================================================
+    // ROUTING: Restore view from URL on page load
+    // Supports: /?artigo=1, /?navegar=Cinema, /?pagina=artigos|navegar|sobre
+    // =========================================================
+    function restoreFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const artigo = params.get('artigo');
+        const navegar = params.get('navegar');
+        const pagina = params.get('pagina');
+
+        if (artigo) {
+            // Direct article link: /?artigo=2
+            switchView('article-detail', artigo);
+        } else if (navegar) {
+            // Filtered browse: /?navegar=Cinema
+            switchView('browse', navegar);
+        } else if (pagina === 'artigos') {
+            switchView('articles');
+        } else if (pagina === 'sobre') {
+            switchView('about');
+        } else if (pagina === 'navegar') {
+            switchView('browse');
+        }
+        // else: stays on home (default)
+    }
+    restoreFromURL();
+
+    // =========================================================
+    // ROUTING: Handle browser Back / Forward buttons
+    // =========================================================
+    window.addEventListener('popstate', (e) => {
+        const state = e.state;
+        if (state && state.viewId) {
+            _fromPopstate = true;
+            switchView(state.viewId, state.param || null);
+        } else {
+            // Fallback: no state (e.g. the very first page load entry)
+            _fromPopstate = true;
+            switchView('home');
+        }
+    });
 
     // Event Delegation for hover and click
     document.addEventListener('mouseover', (e) => {
@@ -476,12 +561,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Back Button
         if (e.target.closest('.back-btn')) {
-            lockedCover = null;
-            updateCircle(null);
-            if (lastListView === 'browse') {
-                switchView('browse', window.lastBrowseTag);
+            // Use browser history if available, otherwise fall back to list view
+            if (window.history.length > 1) {
+                history.back();
             } else {
-                switchView('articles');
+                lockedCover = null;
+                updateCircle(null);
+                if (lastListView === 'browse') {
+                    switchView('browse', window.lastBrowseTag);
+                } else {
+                    switchView('articles');
+                }
             }
             return;
         }

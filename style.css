@@ -288,10 +288,16 @@ main {
 }
 
 
+/* TAREFA 1: Títulos de Artigos
+   font-weight 800->700 alivia a massa visual em multi-linha.
+   line-height 1.3->1.15 é mais editorial e seco (brutalista).
+   letter-spacing -0.5px compensa o peso menor, mantendo aperto tipográfico. */
 .article-item h4 {
     font-size: clamp(0.85rem, 4vw, 1.8rem);
+    font-weight: 700;
     margin: 0.5rem 0;
-    line-height: 1.3;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
     padding-bottom: 2px;
     word-break: keep-all;
     overflow-wrap: normal;
@@ -362,11 +368,14 @@ main {
     letter-spacing: 0.5px;
 }
 
+/* TAREFA 3: Ritmo Visual — parágrafos dos cards com mais respiro */
 .article-item p {
     font-size: 1rem;
     opacity: 0.8;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    margin-bottom: 0.75rem;
+    line-height: 1.55;
 }
 
 /* Article Detail View Styling */
@@ -526,12 +535,13 @@ main {
     }
 }
 
+/* TAREFA 2: Foco no Texto — max-width maior para leitura mais imersiva (estilo Substack) */
 #article-full-content {
     flex: 1;
     overflow-y: auto;
     padding-right: 1.5rem;
-    max-width: 750px;
-    /* Better line length for reading */
+    max-width: 800px;
+    /* Era 750px — mais espaço de leitura */
 }
 
 #article-full-content h2 {
@@ -553,18 +563,25 @@ main {
     color: var(--accent-color);
 }
 
+/* TAREFA 2: Foco no Texto — corpo do artigo com fonte maior e mais linha de respiro */
 #article-full-content p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    /* Era 1.2rem */
+    line-height: 1.75;
+    /* Era 1.6 — leitura mais confortável */
+    margin-bottom: 2rem;
+    /* Era 1.5rem — mais respiro entre parágrafos */
 }
 
+/* TAREFA 3: Ritmo Visual — mais espaço em torno da blockquote */
 #article-full-content blockquote {
     border-left: 4px solid var(--accent-color);
     padding-left: 1.5rem;
-    margin: 2rem 0;
+    margin: 3rem 0;
+    /* Era 2rem — mais destaque e respiro */
     font-style: italic;
     font-size: 1.4rem;
+    line-height: 1.5;
 }
 
 .author-section {
@@ -1222,15 +1239,19 @@ main {
         font-family: var(--font-body);
     }
 
+    /* TAREFA 1: Títulos mobile — mesmos ajustes do desktop */
     .article-item h4 {
         font-size: 1.6rem;
-        line-height: 1.1;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.5px;
         margin-bottom: 0.8rem;
     }
 
+    /* TAREFA 3: Ritmo Visual mobile */
     .article-item p {
         font-size: 1rem;
-        line-height: 1.4;
+        line-height: 1.55;
         opacity: 0.9;
         margin-bottom: 1rem;
     }
